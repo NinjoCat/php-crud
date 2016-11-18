@@ -134,19 +134,15 @@ class CRUDInternalTableObjectsSelector
             */
             if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
-                if ($filter_sql_condition != ''){
+                if ($filter_sql_condition != '') {
                     $where .= ' and ' . $filter_sql_condition;
                 }
 
                 $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
             } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
-                if ($filter_sql_condition != ''){
+                if ($filter_sql_condition != '') {
                     $where .= ' and ' . $filter_sql_condition;
-                }
-
-                if ($empty_table_on_filters_not_filled && !$where) {
-                    $where = ' false';
                 }
 
                 $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
@@ -159,11 +155,15 @@ class CRUDInternalTableObjectsSelector
             $order_by = $db_id_field_name;
         }
 
-        $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
-            $db_id,
-            "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_by . ' limit ' . intval($page_size) . ' offset ' . intval($start),
-            $query_param_values_arr
-        );
+        if ($empty_table_on_filters_not_filled && !$where) {
+            $obj_ids_arr = [];
+        } else {
+            $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
+                $db_id,
+                "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_by . ' limit ' . intval($page_size) . ' offset ' . intval($start),
+                $query_param_values_arr
+            );
+        }
 
         return $obj_ids_arr;
     }
