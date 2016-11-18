@@ -63,11 +63,17 @@ class CRUDInternalTableObjectsSelector
      * Сортировка: TODO.
      * Фильтры: массив $context_arr.
      * Как определяется страница: см. Pager.
+     * @param $table_index_on_page
      * @param $model_class_name Имя класса модели
-     * @param $context_arr array Массив пар "имя поля" - "значение поля"
+     * @param $filters_arr
+     * @param string $order_by
+     * @param bool $empty_table_on_filters_not_filled
+     *
      * @return array Массив идентикаторов объектов.
+     *
+     * @throws \Exception
      */
-    static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by = '')
+    static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by = '', $empty_table_on_filters_not_filled = false)
     {
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
@@ -137,6 +143,10 @@ class CRUDInternalTableObjectsSelector
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
                     $where .= ' and ' . $filter_sql_condition;
+                }
+
+                if ($empty_table_on_filters_not_filled && !$where) {
+                    $where = ' false';
                 }
 
                 $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);

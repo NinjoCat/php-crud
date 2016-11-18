@@ -91,16 +91,19 @@ class CRUDTable
         });
     }
 
-	/**
+    /**
      * table_id - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
      * @param $model_class_name
-	 * @param $create_form_html
-	 * @param $column_obj_arr
-	 * @param array $filters_arr
-	 * @param string $order_by
-	 * @return string
-	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $filters_position = self::FILTERS_POSITION_NONE)
+     * @param $create_form_html
+     * @param $column_obj_arr
+     * @param array $filters_arr
+     * @param string $order_by
+     * @param string $table_id
+     * @param string $filters_position
+     * @param bool $empty_table_on_filters_not_filled
+     * @return string
+     */
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $filters_position = self::FILTERS_POSITION_NONE, $empty_table_on_filters_not_filled = false)
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -117,7 +120,7 @@ class CRUDTable
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 
-		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $filters_position) {
+		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $filters_position, $empty_table_on_filters_not_filled) {
 
 			echo '<div class="row">';
 
@@ -154,7 +157,7 @@ class CRUDTable
 			echo '</tr></thead>';
 
 			echo '<tbody>';
-			$objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by);
+			$objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by, $empty_table_on_filters_not_filled);
 			foreach ($objs_ids_arr as $obj_id) {
 				$obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
