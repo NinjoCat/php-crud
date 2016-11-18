@@ -85,7 +85,8 @@ class CRUDInternalTableObjectsSelector
 
         $db_id_field_name = CRUDFieldsAccess::getIdFieldName($model_class_name);
 
-        $query_param_values_arr = array();
+        $query_param_values_arr = [];
+        $filter_placeholder_values_arr = [];
 
         $where = ' 1 = 1 ';
 
