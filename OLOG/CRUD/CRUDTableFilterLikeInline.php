@@ -10,23 +10,6 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
     protected $title;
     protected $field_name;
     protected $filter_iniq_id;
-    protected $empty_start_list;
-
-    /**
-     * @return mixed
-     */
-    public function getEmptyStartList()
-    {
-        return $this->empty_start_list;
-    }
-
-    /**
-     * @param mixed $empty_start_list
-     */
-    public function setEmptyStartList($empty_start_list)
-    {
-        $this->empty_start_list = $empty_start_list;
-    }
 
     public function getValueFromForm(){
         $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
@@ -62,19 +45,15 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         if ($value != '') {
             $where .= ' ' . $column_name . ' like ? ';
             $placeholder_values_arr[] = '%' . $value . '%';
-        } elseif( $this->empty_start_list ) {
-            $where = ' false';
-            $placeholder_values_arr = '';
         }
 
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($filter_uniq_id, $title, $field_name, $empty_start_list = false){
+    public function __construct($filter_uniq_id, $title, $field_name){
         $this->setFilterIniqId($filter_uniq_id);
         $this->setTitle($title);
         $this->setFieldName($field_name);
-        $this->setEmptyStartList($empty_start_list);
     }
 
     /**
