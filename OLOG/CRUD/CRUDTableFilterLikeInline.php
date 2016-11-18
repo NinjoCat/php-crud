@@ -63,7 +63,8 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
             $where .= ' ' . $column_name . ' like ? ';
             $placeholder_values_arr[] = '%' . $value . '%';
         } elseif( $this->empty_start_list ) {
-            $where .= ' false';
+            $where = ' false';
+            $placeholder_values_arr = '';
         }
 
         return [$where, $placeholder_values_arr];
