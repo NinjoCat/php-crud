@@ -155,7 +155,7 @@ class CRUDInternalTableObjectsSelector
             $order_by = $db_id_field_name;
         }
 
-        if ($empty_table_on_filters_not_filled && !$where) {
+        if ($empty_table_on_filters_not_filled && !$filter_placeholder_values_arr) {
             $obj_ids_arr = [];
         } else {
             $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
